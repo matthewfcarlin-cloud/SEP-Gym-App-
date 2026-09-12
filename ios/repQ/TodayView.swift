@@ -8,12 +8,25 @@ struct TodayView: View {
             VStack(alignment: .leading, spacing: 0) {
                 if store.todaysSplit.isRest {
                     RestDayView()
-                } else if let next = store.plan.steps.first {
+                } else if let next = store.activeStep ?? store.plan.steps.first {
                     header
-                    NextUpCard(step: next, onFinish: {
-                        Haptics.advance()
-                        withAnimation(.snappy(duration: 0.34)) { store.complete(next.machine.id) }
-                    })
+                    NextUpCard(
+                        step: next,
+                        isActive: store.activeMachineID == next.machine.id,
+                        stage: store.currentStage,
+                        totalStages: store.totalStages,
+                        secondsRemaining: { store.secondsRemaining(at: $0) },
+                        onScanIn: {
+                            Haptics.tap()
+                            withAnimation(.snappy(duration: 0.28)) {
+                                store.checkIn(machineID: next.machine.id, station: next.station)
+                            }
+                        },
+                        onFinish: {
+                            Haptics.advance()
+                            withAnimation(.snappy(duration: 0.34)) { store.finishActive() }
+                        }
+                    )
                     .id(next.machine.id)
                     .transition(.asymmetric(
                         insertion: .move(edge: .trailing).combined(with: .opacity),
@@ -65,11 +78,17 @@ struct TodayView: View {
         )
     }
 
+    /// When you're checked in, the whole plan is still ahead of you; otherwise
+    /// the first step is already in the hero card.
+    private var upcoming: [PlannedStep] {
+        store.activeStep == nil ? Array(store.plan.steps.dropFirst()) : store.plan.steps
+    }
+
     private var queue: some View {
         VStack(alignment: .leading, spacing: 8) {
             Eyebrow(text: "Then, in order").padding(.top, 18)
 
-            ForEach(Array(store.plan.steps.dropFirst().enumerated()), id: \.element.machine.id) { position, step in
+            ForEach(Array(upcoming.enumerated()), id: \.element.machine.id) { position, step in
                 QueueRow(step: step, position: position + 1)
                     .transition(.move(edge: .bottom).combined(with: .opacity))
             }
@@ -84,6 +103,11 @@ struct TodayView: View {
 
 struct NextUpCard: View {
     let step: PlannedStep
+    let isActive: Bool
+    let stage: Int
+    let totalStages: Int
+    let secondsRemaining: (Date) -> TimeInterval
+    let onScanIn: () -> Void
     let onFinish: () -> Void
 
     private var waitLabel: String {
@@ -99,8 +123,14 @@ struct NextUpCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Eyebrow(text: step.wasMovedUp ? "Next up · reordered to skip a queue" : "Next up",
-                    tint: Style.accentInk.opacity(0.6))
+            HStack {
+                Eyebrow(text: isActive ? "On the machine now" : (step.wasMovedUp ? "Next up · reordered to skip a queue" : "Next up"),
+                        tint: Style.accentInk.opacity(0.65))
+                Spacer(minLength: 8)
+                Text("\(stage) / \(totalStages)")
+                    .font(.system(size: 11, weight: .heavy))
+                    .foregroundStyle(Style.accentInk.opacity(0.65))
+            }
 
             HStack(spacing: 14) {
                 Image(systemName: step.machine.symbol)
@@ -111,7 +141,7 @@ struct NextUpCard: View {
                         .font(.system(size: 27, weight: .heavy))
                         .lineLimit(2)
                         .minimumScaleFactor(0.7)
-                    Text(waitLabel)
+                    Text(isActive ? "Station #\(step.station) · you're checked in" : waitLabel)
                         .font(.system(size: 13, weight: .semibold))
                         .opacity(0.72)
                 }
@@ -119,20 +149,30 @@ struct NextUpCard: View {
             .foregroundStyle(Style.accentInk)
             .padding(.top, 9)
 
-            HStack(spacing: 8) {
-                HeroChip(value: "#\(step.station)", label: "Station")
-                HeroChip(value: "\(step.machine.minutes) min", label: "On machine")
-                HeroChip(value: doneBy, label: "Done by")
+            if isActive {
+                CountdownBar(total: Double(step.machine.minutes * 60), secondsRemaining: secondsRemaining)
+                    .padding(.top, 16)
+            } else {
+                HStack(spacing: 8) {
+                    HeroChip(value: "#\(step.station)", label: "Station")
+                    HeroChip(value: "\(step.machine.minutes) min", label: "On machine")
+                    HeroChip(value: doneBy, label: "Done by")
+                }
+                .padding(.top, 16)
             }
-            .padding(.top, 16)
 
-            Button(action: onFinish) {
-                Text("Finished — what's next?")
-                    .font(.system(size: 15, weight: .heavy))
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 15)
-                    .background(Style.accentInk, in: RoundedRectangle(cornerRadius: 15))
-                    .foregroundStyle(Style.accent)
+            Button(action: isActive ? onFinish : onScanIn) {
+                HStack(spacing: 8) {
+                    if !isActive {
+                        Image(systemName: "qrcode.viewfinder").font(.system(size: 16, weight: .bold))
+                    }
+                    Text(isActive ? "Finished — what's next?" : "Scan in at this machine")
+                        .font(.system(size: 15, weight: .heavy))
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 15)
+                .background(Style.accentInk, in: RoundedRectangle(cornerRadius: 15))
+                .foregroundStyle(Style.accent)
             }
             .buttonStyle(.plain)
             .padding(.top, 16)
@@ -143,6 +183,46 @@ struct NextUpCard: View {
                            startPoint: .topLeading, endPoint: .bottomTrailing),
             in: RoundedRectangle(cornerRadius: Style.heroRadius)
         )
+    }
+}
+
+/// Live countdown for the machine you're checked into. TimelineView drives the
+/// clock so the store doesn't have to hold a ticking timer.
+struct CountdownBar: View {
+    let total: Double
+    let secondsRemaining: (Date) -> TimeInterval
+
+    private func label(_ seconds: TimeInterval) -> String {
+        let whole = Int(seconds.rounded(.up))
+        return String(format: "%d:%02d", whole / 60, whole % 60)
+    }
+
+    var body: some View {
+        TimelineView(.periodic(from: .now, by: 1)) { context in
+            let remaining = secondsRemaining(context.date)
+            let fraction = total > 0 ? max(0, min(1, remaining / total)) : 0
+
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(alignment: .firstTextBaseline, spacing: 6) {
+                    Text(label(remaining))
+                        .font(.system(size: 34, weight: .heavy).monospacedDigit())
+                    Text(remaining <= 0 ? "· time's up, rack it" : "left on this machine")
+                        .font(.system(size: 12, weight: .bold))
+                        .opacity(0.65)
+                }
+
+                GeometryReader { geometry in
+                    ZStack(alignment: .leading) {
+                        Capsule().fill(Style.accentInk.opacity(0.15))
+                        Capsule()
+                            .fill(Style.accentInk)
+                            .frame(width: max(4, geometry.size.width * fraction))
+                    }
+                }
+                .frame(height: 8)
+            }
+            .foregroundStyle(Style.accentInk)
+        }
     }
 }
 

@@ -32,6 +32,10 @@ final class GymStore {
     private(set) var schedule: [String: String]
     private(set) var occupancy: Scheduler.Ledger
     private(set) var completed: [String] = []
+    /// The machine you are currently checked into, and when you started.
+    private(set) var activeMachineID: String?
+    private(set) var activeStartedAt: Date?
+    private(set) var activeStation: Int = 1
     private(set) var others: [Member]
     var editingDay: String?
 
@@ -51,7 +55,21 @@ final class GymStore {
     }
 
     var remainingExercises: [String] {
-        todaysSplit.exercises.filter { !completed.contains($0) }
+        todaysSplit.exercises.filter { $0 != activeMachineID && !completed.contains($0) }
+    }
+
+    /// The machine you're on, shaped like a plan step so the hero card can show
+    /// it the same way it shows an upcoming one.
+    var activeStep: PlannedStep? {
+        guard let machine = activeMachine else { return nil }
+        return PlannedStep(
+            machine: machine,
+            station: activeStation,
+            startsAt: 0,
+            endsAt: Double(machine.minutes),
+            wait: 0,
+            plannedIndex: 0
+        )
     }
 
     var plan: SessionPlan {
@@ -60,6 +78,21 @@ final class GymStore {
             others: others,
             userExercises: remainingExercises
         )
+    }
+
+    /// Where you are in today's session, 1-based, for the stage indicator.
+    var currentStage: Int { completed.count + 1 }
+    var totalStages: Int { todaysSplit.exercises.count }
+
+    var activeMachine: Machine? {
+        activeMachineID.flatMap { Machine.byID[$0] }
+    }
+
+    /// Seconds left on the machine you are checked into.
+    func secondsRemaining(at now: Date) -> TimeInterval {
+        guard let machine = activeMachine, let started = activeStartedAt else { return 0 }
+        let total = TimeInterval(machine.minutes * 60)
+        return max(0, total - now.timeIntervalSince(started))
     }
 
     var openStationCount: Int {
@@ -106,6 +139,23 @@ final class GymStore {
         occupancy[machine.id] = stations
     }
 
+    /// You scanned the QR code on a machine and started your set. This is what
+    /// the camera scanner calls once it decodes a tag.
+    func checkIn(machineID: String, station: Int) {
+        activeMachineID = machineID
+        activeStartedAt = Date()
+        activeStation = station
+        scanOn(machineID: machineID, station: station)
+    }
+
+    /// You finished the machine you were checked into.
+    func finishActive() {
+        guard let machineID = activeMachineID else { return }
+        activeMachineID = nil
+        activeStartedAt = nil
+        complete(machineID)
+    }
+
     /// Called when someone scans the QR code on a machine and starts using it.
     func scanOn(machineID: String, station: Int) {
         guard let machine = Machine.byID[machineID],
@@ -125,6 +175,8 @@ final class GymStore {
 
     func restart() {
         completed = []
+        activeMachineID = nil
+        activeStartedAt = nil
         var random = SeededRandom(seed: Self.seed)
         occupancy = Self.makeOccupancy(&random)
     }
