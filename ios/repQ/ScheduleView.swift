@@ -32,6 +32,7 @@ struct ScheduleView: View {
                         SplitPicker(
                             selected: store.split(on: day),
                             onPick: { split in
+                                Haptics.tap()
                                 withAnimation(.snappy(duration: 0.22)) { store.assign(split: split, to: day) }
                             }
                         )

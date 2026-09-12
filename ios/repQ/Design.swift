@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 enum Style {
     static let bg = Color(hex: "0B0D11")
@@ -110,4 +111,15 @@ struct CardBackground: ViewModifier {
 
 extension View {
     func card() -> some View { modifier(CardBackground()) }
+}
+
+/// Physical feedback on the taps that represent real-world actions.
+enum Haptics {
+    static func tap() {
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+    }
+
+    static func advance() {
+        UINotificationFeedbackGenerator().notificationOccurred(.success)
+    }
 }

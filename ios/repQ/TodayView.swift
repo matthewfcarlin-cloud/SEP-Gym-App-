@@ -10,8 +10,16 @@ struct TodayView: View {
                     RestDayView()
                 } else if let next = store.plan.steps.first {
                     header
-                    NextUpCard(step: next, onFinish: { store.complete(next.machine.id) })
-                        .padding(.top, 16)
+                    NextUpCard(step: next, onFinish: {
+                        Haptics.advance()
+                        withAnimation(.snappy(duration: 0.34)) { store.complete(next.machine.id) }
+                    })
+                    .id(next.machine.id)
+                    .transition(.asymmetric(
+                        insertion: .move(edge: .trailing).combined(with: .opacity),
+                        removal: .scale(scale: 0.94).combined(with: .opacity)
+                    ))
+                    .padding(.top, 16)
                     statRow.padding(.top, 14)
                     queue.padding(.top, 8)
                 } else {
@@ -61,8 +69,9 @@ struct TodayView: View {
         VStack(alignment: .leading, spacing: 8) {
             Eyebrow(text: "Then, in order").padding(.top, 18)
 
-            ForEach(Array(store.plan.steps.dropFirst().enumerated()), id: \.element.id) { position, step in
+            ForEach(Array(store.plan.steps.dropFirst().enumerated()), id: \.element.machine.id) { position, step in
                 QueueRow(step: step, position: position + 1)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
             }
             ForEach(store.completed, id: \.self) { machineID in
                 if let machine = Machine.byID[machineID] {

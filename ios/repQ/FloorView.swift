@@ -23,7 +23,12 @@ struct FloorView: View {
                     MachineRow(
                         machine: machine,
                         stations: store.occupancy[machine.id] ?? [],
-                        onToggle: { index in store.toggleStation(machine: machine, index: index) }
+                        onToggle: { index in
+                            Haptics.tap()
+                            withAnimation(.snappy(duration: 0.2)) {
+                                store.toggleStation(machine: machine, index: index)
+                            }
+                        }
                     )
                 }
             }
