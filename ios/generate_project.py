@@ -8,18 +8,21 @@ def obj(key, val): objects.append(f'{uid(key)} = {{ {val} }};')
 for f in files:
     obj(f.name, f'isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = {f.name}; sourceTree = "<group>";')
     obj('build'+f.name, f'isa = PBXBuildFile; fileRef = {uid(f.name)};')
+obj('Assets.xcassets', 'isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>";')
+obj('buildAssets.xcassets', f'isa = PBXBuildFile; fileRef = {uid("Assets.xcassets")};')
 obj('product', 'isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = repQ.app; sourceTree = BUILT_PRODUCTS_DIR;')
 obj('sources', 'isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = ('+','.join(uid('build'+f.name) for f in files)+'); runOnlyForDeploymentPostprocessing = 0;')
 obj('frameworks', 'isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0;')
-obj('resources', 'isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0;')
-obj('sourceGroup', 'isa = PBXGroup; children = ('+','.join(uid(f.name) for f in files)+'); path = repQ; sourceTree = "<group>";')
+obj('resources', f'isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = ({uid("buildAssets.xcassets")}); runOnlyForDeploymentPostprocessing = 0;')
+obj('sourceGroup', 'isa = PBXGroup; children = ('+','.join(uid(f.name) for f in files)+f',{uid("Assets.xcassets")}); path = repQ; sourceTree = "<group>";')
 obj('products', f'isa = PBXGroup; children = ({uid("product")}); name = Products; sourceTree = "<group>";')
 obj('mainGroup', f'isa = PBXGroup; children = ({uid("sourceGroup")},{uid("products")}); sourceTree = "<group>";')
 for name in ('Debug','Release'):
     obj('project'+name, f'isa = XCBuildConfiguration; name = {name}; buildSettings = {{ SDKROOT = iphoneos; IPHONEOS_DEPLOYMENT_TARGET = 17.0; CLANG_ENABLE_MODULES = YES; SWIFT_VERSION = 5.0; }};')
     obj('target'+name, f'''isa = XCBuildConfiguration; name = {name}; buildSettings = {{
       PRODUCT_NAME = "$(TARGET_NAME)"; PRODUCT_BUNDLE_IDENTIFIER = com.sep.repq;
-      GENERATE_INFOPLIST_FILE = YES; INFOPLIST_KEY_CFBundleDisplayName = repQ;
+      ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+      GENERATE_INFOPLIST_FILE = YES; INFOPLIST_KEY_CFBundleDisplayName = RepQ;
       INFOPLIST_KEY_NSCameraUsageDescription = "Scan the QR code on a machine to check in and keep the floor accurate.";
       INFOPLIST_KEY_UILaunchScreen_Generation = YES;
       INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

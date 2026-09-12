@@ -2,14 +2,14 @@ import SwiftUI
 import UIKit
 
 enum Style {
-    static let bg = Color(hex: "0B0D11")
+    static let bg = Color(hex: "08090C")       // the logo sits on true black
     static let surface = Color(hex: "151922")
     static let surfaceLift = Color(hex: "1D222D")
     static let line = Color(hex: "272D3A")
-    static let text = Color(hex: "F3F5F8")
+    static let text = Color(hex: "F7F7F7")      // sampled from the logo wordmark
     static let muted = Color(hex: "8A94A6")
-    static let accent = Color(hex: "C6F24E")
-    static let accentInk = Color(hex: "12160C")
+    static let accent = Color(hex: "DFF86C")    // sampled from the logo plates
+    static let accentInk = Color(hex: "0B0D05")
     static let busy = Color(hex: "FF5F56")
     static let free = Color(hex: "38D07A")
 
@@ -111,6 +111,16 @@ struct CardBackground: ViewModifier {
 
 extension View {
     func card() -> some View { modifier(CardBackground()) }
+}
+
+/// The brand line, used where a screen has room to breathe.
+struct Tagline: View {
+    var body: some View {
+        Text("LESS WAITING.  MORE REPS.")
+            .font(.system(size: 10, weight: .heavy))
+            .tracking(1.4)
+            .foregroundStyle(Style.muted.opacity(0.7))
+    }
 }
 
 /// Physical feedback on the taps that represent real-world actions.

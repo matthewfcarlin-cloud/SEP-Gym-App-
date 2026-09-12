@@ -139,7 +139,7 @@ struct NextUpCard: View {
         }
         .padding(20)
         .background(
-            LinearGradient(colors: [Style.accent, Color(hex: "A8DC36")],
+            LinearGradient(colors: [Style.accent, Color(hex: "C4E44A")],
                            startPoint: .topLeading, endPoint: .bottomTrailing),
             in: RoundedRectangle(cornerRadius: Style.heroRadius)
         )
@@ -222,6 +222,7 @@ struct RestDayView: View {
             Text("Nothing scheduled — go eat.")
                 .font(.system(size: 14))
                 .foregroundStyle(Style.muted)
+            Tagline().padding(.top, 18)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 90)
@@ -247,6 +248,7 @@ struct SessionDoneView: View {
                 .font(.system(size: 14, weight: .bold))
                 .foregroundStyle(Style.accent)
                 .padding(.top, 4)
+            Tagline().padding(.top, 14)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 90)

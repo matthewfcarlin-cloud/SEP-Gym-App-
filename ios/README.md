@@ -1,6 +1,6 @@
-# repQ — iOS app
+# RepQ — iOS app
 
-The scheduling half of repQ, in SwiftUI. You set your weekly split; the app reads live
+The scheduling half of RepQ, in SwiftUI. You set your weekly split; the app reads live
 machine occupancy and tells you **which machine to walk to next**, ordered so you never
 queue and so your route doesn't collide with anyone else's.
 
@@ -80,6 +80,23 @@ never needs to know the algorithm exists.
 
 The camera permission string is already set in `generate_project.py`
 (`INFOPLIST_KEY_NSCameraUsageDescription`), so `AVCaptureSession` will prompt correctly.
+
+## Brand assets
+
+The app icon and the launch logo are both generated from the master logo at
+`brand/logo-source.png`, so there is one source of truth:
+
+```bash
+swift brand/make_icon.swift brand/logo-source.png \
+  ios/repQ/Assets.xcassets/AppIcon.appiconset/icon-1024.png 188 205 480 253 0.11
+```
+
+The arguments are the crop rect in the source image plus a percentage inset.
+The icon uses the barbell mark alone (the wordmark is illegible at 60px); the
+splash uses the full lockup including the tagline.
+
+Palette values in `Design.swift` are sampled from the logo itself — lime
+`#DFF86C` from the plates, white `#F7F7F7` from the wordmark.
 
 ## Files
 

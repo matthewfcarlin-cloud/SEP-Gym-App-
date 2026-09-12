@@ -1,4 +1,4 @@
-# repQ
+# RepQ
 
 A gym app that tells you which machine to use next, so you never wait.
 
@@ -12,7 +12,7 @@ everyone else training at the same time so two people are never sent to the same
 |---|---|---|
 | `ios/` | **The app.** SwiftUI, opens in Xcode. Scheduling, routing, all three screens. | Matthew |
 | `web/` | Browser prototype of the same idea. Superseded by `ios/` — kept for reference. | — |
-| `outputs/Borrow/` | Unrelated earlier equipment-rental demo. Not part of repQ. | — |
+| `outputs/Borrow/` | Unrelated earlier equipment-rental demo. Not part of RepQ. | — |
 
 Start here: [`ios/README.md`](ios/README.md).
 

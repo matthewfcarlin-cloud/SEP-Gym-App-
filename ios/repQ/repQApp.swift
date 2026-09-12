@@ -13,6 +13,7 @@ struct RepQApp: App {
 struct RootView: View {
     @State private var store = GymStore()
     @State private var tab = Tab.today
+    @State private var isSplashVisible = true
 
     /// How often the floor advances, so waits stay honest.
     private let tickInterval: TimeInterval = 15
@@ -60,12 +61,18 @@ struct RootView: View {
             guard tab != .week else { return } // don't yank the UI mid-edit
             store.tick()
         }
+        .overlay {
+            if isSplashVisible {
+                SplashView { isSplashVisible = false }
+                    .transition(.opacity)
+            }
+        }
     }
 
     private var topBar: some View {
         HStack {
             HStack(spacing: 0) {
-                Text("rep").foregroundStyle(Style.text)
+                Text("Rep").foregroundStyle(Style.text)
                 Text("Q").foregroundStyle(Style.accent)
             }
             .font(.system(size: 21, weight: .heavy))
