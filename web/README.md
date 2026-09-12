@@ -1,4 +1,4 @@
-# NextUp — gym session router
+# repQ — gym session router
 
 The scheduling half of the gym app. You set your weekly split; the app reads live
 machine occupancy and tells you **which machine to walk to next**, ordered so you
@@ -64,7 +64,7 @@ On a scan-off, set it to `0`. Drop the object into `state.occupancy` and re-rend
 `currentPlan()` re-routes from scratch every render, so nothing else needs to change.
 
 Machine IDs live in `js/data.js` and are what the QR codes should encode
-(e.g. `nextup://machine/squat-rack/2` for station 2).
+(e.g. `repq://machine/squat-rack/2` for station 2).
 
 ## Files
 

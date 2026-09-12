@@ -1,0 +1,52 @@
+// !$*UTF8*$!
+{ archiveVersion = 1; classes = {}; objectVersion = 56; objects = {
+D9050A49F210EE381C91CCFE = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Design.swift; sourceTree = "<group>"; };
+182EA626E1D63B975B4BF427 = { isa = PBXBuildFile; fileRef = D9050A49F210EE381C91CCFE; };
+163E5EAC737ADBE44F0FEC3C = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorView.swift; sourceTree = "<group>"; };
+65A8A01A2461C232274E4B47 = { isa = PBXBuildFile; fileRef = 163E5EAC737ADBE44F0FEC3C; };
+D3299E74555ED071E61B45E9 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GymStore.swift; sourceTree = "<group>"; };
+4AEF2D216C2B9B29C9075E73 = { isa = PBXBuildFile; fileRef = D3299E74555ED071E61B45E9; };
+8BF4A28E43F6CF370D3EE1C2 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+487C502A5481E87001E8CC43 = { isa = PBXBuildFile; fileRef = 8BF4A28E43F6CF370D3EE1C2; };
+7CB7EC7627E2E5D860E47CAB = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleView.swift; sourceTree = "<group>"; };
+252F499D5262E7D14FE9E752 = { isa = PBXBuildFile; fileRef = 7CB7EC7627E2E5D860E47CAB; };
+5454EAD01C17C57B915B9545 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scheduler.swift; sourceTree = "<group>"; };
+5F185B3A5D61C444BCD7B885 = { isa = PBXBuildFile; fileRef = 5454EAD01C17C57B915B9545; };
+43433106FF64927F1BB21EB4 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
+9AEF914CF4D78D1DFCAF1B9F = { isa = PBXBuildFile; fileRef = 43433106FF64927F1BB21EB4; };
+6A45E019CDE205118F050A2E = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = repQApp.swift; sourceTree = "<group>"; };
+2FC2B4890721BF8B70F29172 = { isa = PBXBuildFile; fileRef = 6A45E019CDE205118F050A2E; };
+38A007151ABE87CC01A5B6E9 = { isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = repQ.app; sourceTree = BUILT_PRODUCTS_DIR; };
+BCE16DD0260827ECF338C787 = { isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (182EA626E1D63B975B4BF427,65A8A01A2461C232274E4B47,4AEF2D216C2B9B29C9075E73,487C502A5481E87001E8CC43,252F499D5262E7D14FE9E752,5F185B3A5D61C444BCD7B885,9AEF914CF4D78D1DFCAF1B9F,2FC2B4890721BF8B70F29172); runOnlyForDeploymentPostprocessing = 0; };
+7561BFB015D8F536760CB671 = { isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+0189424A5A60FED329FA868E = { isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+1BDBD24583AAF7F81F76B976 = { isa = PBXGroup; children = (D9050A49F210EE381C91CCFE,163E5EAC737ADBE44F0FEC3C,D3299E74555ED071E61B45E9,8BF4A28E43F6CF370D3EE1C2,7CB7EC7627E2E5D860E47CAB,5454EAD01C17C57B915B9545,43433106FF64927F1BB21EB4,6A45E019CDE205118F050A2E); path = repQ; sourceTree = "<group>"; };
+FBDC4F23F93125BBEEAE800C = { isa = PBXGroup; children = (38A007151ABE87CC01A5B6E9); name = Products; sourceTree = "<group>"; };
+E50290A24C49A459B43487C5 = { isa = PBXGroup; children = (1BDBD24583AAF7F81F76B976,FBDC4F23F93125BBEEAE800C); sourceTree = "<group>"; };
+89E1FD6268CC0F221A2BE178 = { isa = XCBuildConfiguration; name = Debug; buildSettings = { SDKROOT = iphoneos; IPHONEOS_DEPLOYMENT_TARGET = 17.0; CLANG_ENABLE_MODULES = YES; SWIFT_VERSION = 5.0; }; };
+7082CC0B6FC1282FCEABD07A = { isa = XCBuildConfiguration; name = Debug; buildSettings = {
+      PRODUCT_NAME = "$(TARGET_NAME)"; PRODUCT_BUNDLE_IDENTIFIER = com.sep.repq;
+      GENERATE_INFOPLIST_FILE = YES; INFOPLIST_KEY_CFBundleDisplayName = repQ;
+      INFOPLIST_KEY_NSCameraUsageDescription = "Scan the QR code on a machine to check in and keep the floor accurate.";
+      INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+      INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+      INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait";
+      TARGETED_DEVICE_FAMILY = 1; CODE_SIGN_STYLE = Automatic;
+      SWIFT_EMIT_LOC_STRINGS = YES; SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+    }; };
+E6DE6C99132752C914FEF632 = { isa = XCBuildConfiguration; name = Release; buildSettings = { SDKROOT = iphoneos; IPHONEOS_DEPLOYMENT_TARGET = 17.0; CLANG_ENABLE_MODULES = YES; SWIFT_VERSION = 5.0; }; };
+639A7CA24D39909E713B47F7 = { isa = XCBuildConfiguration; name = Release; buildSettings = {
+      PRODUCT_NAME = "$(TARGET_NAME)"; PRODUCT_BUNDLE_IDENTIFIER = com.sep.repq;
+      GENERATE_INFOPLIST_FILE = YES; INFOPLIST_KEY_CFBundleDisplayName = repQ;
+      INFOPLIST_KEY_NSCameraUsageDescription = "Scan the QR code on a machine to check in and keep the floor accurate.";
+      INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+      INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+      INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait";
+      TARGETED_DEVICE_FAMILY = 1; CODE_SIGN_STYLE = Automatic;
+      SWIFT_EMIT_LOC_STRINGS = YES; SWIFT_OPTIMIZATION_LEVEL = "-O";
+    }; };
+41A2CC2D5321B7BB2E956CA5 = { isa = XCConfigurationList; buildConfigurations = (89E1FD6268CC0F221A2BE178,E6DE6C99132752C914FEF632); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+B483F6EB73610DE752E457A0 = { isa = XCConfigurationList; buildConfigurations = (7082CC0B6FC1282FCEABD07A,639A7CA24D39909E713B47F7); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+0E8A3AD980EC179856012B7E = { isa = PBXNativeTarget; buildConfigurationList = B483F6EB73610DE752E457A0; buildPhases = (BCE16DD0260827ECF338C787,7561BFB015D8F536760CB671,0189424A5A60FED329FA868E); buildRules = (); dependencies = (); name = repQ; productName = repQ; productReference = 38A007151ABE87CC01A5B6E9; productType = "com.apple.product-type.application"; };
+98F54143AB4E86B28C3AFEE0 = { isa = PBXProject; attributes = { LastUpgradeCheck = 1600; }; buildConfigurationList = 41A2CC2D5321B7BB2E956CA5; compatibilityVersion = "Xcode 14.0"; developmentRegion = en; hasScannedForEncodings = 0; knownRegions = (en,Base); mainGroup = E50290A24C49A459B43487C5; productRefGroup = FBDC4F23F93125BBEEAE800C; projectDirPath = ""; projectRoot = ""; targets = (0E8A3AD980EC179856012B7E); };
+}; rootObject = 98F54143AB4E86B28C3AFEE0; }

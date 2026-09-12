@@ -190,7 +190,7 @@ function renderApp(state) {
 
   return `
     <div class="topbar">
-      <div class="brand"><h1>Next<span>Up</span></h1></div>
+      <div class="brand"><h1>rep<span>Q</span></h1></div>
       <div class="live"><span class="dot"></span>${state.others.length + 1} in gym</div>
     </div>
     ${body}

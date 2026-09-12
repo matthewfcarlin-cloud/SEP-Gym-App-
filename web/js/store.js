@@ -1,6 +1,6 @@
 /* App state. Every update returns a new state object; nothing is mutated in place. */
 
-const STORAGE_KEY = 'nextup.mvp.v1';
+const STORAGE_KEY = 'repq.mvp.v1';
 const OTHER_MEMBER_COUNT = 6;
 
 const DEFAULT_SCHEDULE = {
