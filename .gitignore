@@ -1,0 +1,7 @@
+.DS_Store
+DerivedData/
+*.xcuserstate
+xcuserdata/
+work/*
+!work/generate_project.py
+!work/create_assets.swift
